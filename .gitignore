@@ -1,0 +1,7 @@
+.vscode
+backup.cpp
+main.o
+*.dll
+sfml-app
+sfml-app.exe
+run.txt
