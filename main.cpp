@@ -55,18 +55,21 @@ int main()
     txtMain.setFillColor(sf::Color::White);
     txtMain.setPosition(530, 165);
 
-    sf::Text txtExit;
-    txtExit.setFont(font);
-    txtExit.setString(L"Заберите воду");
-    txtExit.setCharacterSize(10);
-    txtExit.setFillColor(sf::Color::White);
-    txtExit.setPosition(573, 255);
+    std::vector<sf::Text> txtPay{2};
+    for (size_t i = 0; i < txtPay.size(); i++)
+    {
+        txtPay[i].setFont(font);
+        txtPay[i].setString(i ? L"Ожидайте..." : L"Заберите воду");
+        txtPay[i].setCharacterSize(10);
+        txtPay[i].setFillColor(sf::Color::White);
+        txtPay[i].setPosition(i ? sf::Vector2f(581, 255) : sf::Vector2f(573, 255));
+    }
 
     std::vector<sf::Text> txtV{2};
     for (size_t i = 0; i < txtV.size(); i++)
     {
         txtV[i].setFont(font);
-        txtV[i].setString(i ? L"5 литров" : L"10 литров");
+        txtV[i].setString(i ? L"5 литров 20 р." : L"10 литров 26 р.");
         txtV[i].setCharacterSize(12);
         txtV[i].setFillColor(sf::Color::White);
         txtV[i].setPosition(i ? sf::Vector2f(545, 182) : sf::Vector2f(545, 207));
@@ -90,8 +93,8 @@ int main()
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-        std::cout << "x: " << pixelPos.x << " y: " << pixelPos.y << std::endl;
+        // sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        // std::cout << "x: " << pixelPos.x << " y: " << pixelPos.y << std::endl;
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -149,7 +152,11 @@ int main()
             if (time_interval > 0)
                 window.draw(currentBtl[0]);
             if (time_interval > 3)
+            {
                 window.draw(currentBtl[1]);
+                if (time_interval < 11)
+                    window.draw(txtPay[1]);
+            }
             if (time_interval > 5)
                 window.draw(currentBtl[2]);
             if (time_interval > 7)
@@ -160,7 +167,8 @@ int main()
             {
                 window.draw(currentBtl[5]);
                 flgPressedFillBtn = false;
-                window.draw(txtExit);
+                window.draw(txtPay[0]);
+                time_interval = 0;
             }
         }
 
@@ -169,7 +177,7 @@ int main()
         window.draw(txtMain);
         window.draw(txtV[0]);
         window.draw(txtV[1]);
-        if (flgPressedFillBtn)
+        if (flgPressedFillBtn && time_interval < 3)
             window.draw(txtCard[flgPressedCard ? 0 : 1]);
         window.display();
     }
